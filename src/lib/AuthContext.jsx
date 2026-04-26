@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { appParams } from '@/lib/app-params';
+import { appParams, isBase44Configured } from '@/lib/app-params';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
 
 const AuthContext = createContext();
@@ -18,6 +18,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const checkAppState = async () => {
+    if (!isBase44Configured) {
+      setIsLoadingPublicSettings(false);
+      setIsLoadingAuth(false);
+      setIsAuthenticated(false);
+      setAuthError(null);
+      return;
+    }
+
     try {
       setIsLoadingPublicSettings(true);
       setAuthError(null);
@@ -114,6 +122,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     
+    if (!isBase44Configured) {
+      return;
+    }
+
     if (shouldRedirect) {
       // Use the SDK's logout method which handles token cleanup and redirect
       base44.auth.logout(window.location.href);
@@ -124,6 +136,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const navigateToLogin = () => {
+    if (!isBase44Configured) {
+      return;
+    }
+
     // Use the SDK's redirectToLogin method
     base44.auth.redirectToLogin(window.location.href);
   };
