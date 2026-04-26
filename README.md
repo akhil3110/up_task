@@ -1,39 +1,73 @@
-**Welcome to your Base44 project** 
+# Base44 Export → Local Run + Vercel Deploy
 
-**About**
+This project can run in two modes:
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+1. **Static website mode (no backend required)** ✅
+2. **Base44 connected mode (requires Base44 env vars)**
 
-This project contains everything you need to run your app locally.
+## Run locally (no backend required)
 
-**Edit the code in your local development environment**
-
-Any change pushed to the repo will also be reflected in the Base44 Builder.
-
-**Prerequisites:** 
-
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
-
+```bash
+npm install
+npm run dev
 ```
+
+Open the local URL shown by Vite (usually `http://localhost:5173`).
+
+> No `.env.local` file is required for static website mode.
+
+## Optional: Run with Base44 backend
+
+Create `.env.local` only if you need Base44 auth/API features:
+
+```env
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=your_backend_url
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
 ```
 
-Run the app: `npm run dev`
+Then run:
 
-**Publish your changes**
+```bash
+npm run dev
+```
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## Build locally (production check)
 
-**Docs & Support**
+```bash
+npm run build
+npm run preview
+```
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+## Deploy to Vercel
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+### Option A: Vercel Dashboard
+1. Push this repo to GitHub.
+2. In Vercel, click **Add New → Project**.
+3. Import the repository.
+4. Keep defaults:
+   - Framework preset: **Vite**
+   - Build command: `npm run build`
+   - Output directory: `dist`
+5. Click **Deploy**.
+
+### Option B: Vercel CLI
+
+```bash
+npm i -g vercel
+vercel
+vercel --prod
+```
+
+## Connect your custom domain in Vercel
+
+1. Open your project in Vercel.
+2. Go to **Settings → Domains**.
+3. Add your domain (e.g. `example.com`).
+4. Add the DNS records shown by Vercel at your domain provider.
+   - Usually an **A** record for root (`@`) and/or **CNAME** for `www`.
+5. Wait for DNS propagation, then mark primary domain in Vercel.
+
+## Notes
+
+- `vercel.json` is included with an SPA rewrite so client-side routes load correctly on refresh.
+- If you are only deploying a marketing/informational site, you can leave Base44 env vars unset.
